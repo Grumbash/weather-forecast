@@ -15,6 +15,7 @@ export function Counter() {
   const count = useAppSelector(selectCount);
   const dispatch = useAppDispatch();
   const [incrementAmount, setIncrementAmount] = useState('2');
+  const [name, setName] = useState("Gleb")
 
   const incrementValue = Number(incrementAmount) || 0;
 
@@ -44,6 +45,12 @@ export function Counter() {
           value={incrementAmount}
           onChange={(e) => setIncrementAmount(e.target.value)}
         />
+        <input
+          className={styles.textbox}
+          aria-label="Set name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
         <button
           className={styles.button}
           onClick={() => dispatch(incrementByAmount(incrementValue))}
@@ -63,6 +70,7 @@ export function Counter() {
           Add If Odd
         </button>
       </div>
+      <p> {name} </p>
     </div>
   );
 }
