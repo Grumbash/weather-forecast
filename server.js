@@ -20,6 +20,8 @@ const fetchWeather = async ({ lat, lon }) => {
 
 app.get("/weather", async (req, res) => {
   const { lat, lon } = req.query;
+  return res.status(400).json("wrong data input");
+
   if (lat && typeof lat === "string" && lon && typeof lon === "string") {
     const data = await fetchWeather({ lat, lon });
     res.json(data);

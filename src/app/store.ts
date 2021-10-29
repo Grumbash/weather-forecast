@@ -1,11 +1,17 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import { setupListeners } from '@reduxjs/toolkit/dist/query';
+import {weatherApi} from '../features/weather/weatherAPI'
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    [weatherApi.reducerPath]: weatherApi.reducer,
   },
+
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(weatherApi.middleware),
 });
+
+setupListeners(store.dispatch);
 
 // const unknown: number = 44
 
