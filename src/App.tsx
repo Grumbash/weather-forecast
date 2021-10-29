@@ -1,12 +1,18 @@
 import React from 'react';
 import './App.css';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Weather } from './features/weather/Weather';
 
 function App() {
   return (
     <div className="App">
-      <Weather></Weather>
-
+      <Router>
+        <Switch>
+          <Route path="/weather">
+            <Weather />
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 }
