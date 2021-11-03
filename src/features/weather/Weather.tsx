@@ -2,11 +2,18 @@ import React, { useEffect, FC, useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useGetWeatherByQueryQuery } from "./weatherAPI";
 import { Fact, Geo } from "./type";
-import { useQuery } from "../../app/hooks";
 import Box from "@mui/material/Box";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert, { AlertProps } from "@mui/material/Alert";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
+import {
+  YMaps,
+  Map,
+  SearchControl,
+  GeolocationControl,
+  Circle,
+} from "react-yandex-maps";
+import { Input } from "@mui/material";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
@@ -20,17 +27,19 @@ interface Props {
 }
 
 export const Weather: FC<Props> = (props) => {
-  const query = useQuery()
-  const lat = query.get("lat");
-  const lon = query.get("lon");
+  // const query = useQuery()
+  // const lat = query.get("lat");
+  // const lon = query.get("lon");
   const [geo, setGeo] = useState<Geo>();
   const [factState, setFact] = useState<Fact>();
-   const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [lat, setLat] = useState('11.632062');
+  const [lon, setLon] = useState('51.104087');
   const { data, error, isError, isLoading, isSuccess } =
     useGetWeatherByQueryQuery({
       lat: Number(lat),
       lon: Number(lon),
-    });
+  });
 
   useEffect(() => {
     if (isSuccess && data) {
@@ -55,6 +64,16 @@ export const Weather: FC<Props> = (props) => {
     setOpen(false);
   };
 
+  const changeCoords =
+    (direction: "lat" | "lon") => (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (direction === "lat") {
+        setLat(e.target.value);
+      }
+      if (direction === "lon") {
+        setLon(e.target.value);
+      }
+    };
+
   return (
     <div>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
@@ -77,6 +96,33 @@ export const Weather: FC<Props> = (props) => {
           </p>
         </Box>
       )}
+      <Box>
+        <Input name="lat" value={lat} onChange={changeCoords("lat")}></Input>
+        <Input name="lon" value={lon} onChange={changeCoords("lon")}></Input>
+      </Box>
+      <YMaps>
+        <div>
+          <Map
+            state={{ center: [Number(lat), Number(lon)], zoom: 5 }}
+            height="600px"
+            width="100%"
+
+          >
+            <Circle
+              geometry={[[Number(lat), Number(lon)], 10000]}
+              options={{
+                draggable: false,
+                fillColor: "#DB709377",
+                strokeColor: "#990066",
+                strokeOpacity: 0.8,
+                strokeWidth: 5,
+              }}
+            />
+            <SearchControl options={{ float: "right" }} />
+            <GeolocationControl options={{ float: "left" }} />
+          </Map>
+        </div>
+      </YMaps>
     </div>
   );
 };

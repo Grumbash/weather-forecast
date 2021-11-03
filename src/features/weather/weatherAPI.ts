@@ -9,15 +9,16 @@ export const fetchWeather = async ({lat, lon}: Coords): Promise<Response> => {
   return data;
 };
 
-
 export const weatherApi = createApi({
   reducerPath: "weatherApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:4000" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://forecast-be-api.herokuapp.com/",
+  }),
   endpoints: (builder) => ({
     getWeatherByQuery: builder.query<Response, Coords>({
-      query: ({ lat, lon }) => `/weather?lat=${lat}&lon=${lon}`
+      query: ({ lat, lon }) => `/weather?lat=${lat}&lon=${lon}`,
     }),
-  })
+  }),
 });
 
 export const { useGetWeatherByQueryQuery } = weatherApi;
